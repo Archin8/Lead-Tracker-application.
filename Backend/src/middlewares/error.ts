@@ -1,48 +1,15 @@
+import { Request, Response, NextFunction } from 'express';
 
-  import { NextFunction, Request, Response } from "express";
-  import HttpError from "../utils/errorHandler.js";
-  import { envMode } from "../app.js";
-  
-  export const errorMiddleware = (
-   err:HttpError,
-   req:Request,
-   res:Response,
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-   next:NextFunction
-  )=> {
-  
-   err.message||= "Internal Server Error";
-   err.statusCode = err.statusCode || 500;
-    
-   const response:{
-    success: boolean,
-    message: string,
-    error?:HttpError
-   } = {
-      success: false,
-      message: err.message,
-   };
-  
-   if (envMode === "DEVELOPMENT") {
-     response.error = err;
-   }
-  
-   return res.status(err.statusCode).json(response);
-  
-  };
-  
-  type ControllerType = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void | Response<unknown, Record<string, unknown>>>;
-  
-  export const TryCatch = (passedFunc:ControllerType) => async (req:Request, res:Response, next:NextFunction) => {
-   try {
-     await passedFunc(req, res, next);
-   } catch (error) {
-      next(error);
-    }
-  };
-  
-  
+interface PgError extends Error { code?: string; }
+
+export function errorHandler(err: PgError, _req: Request, res: Response, _next: NextFunction) {
+  console.error(err);
+  if (err.code === '23505') {
+    return res.status(409).json({ error: 'A lead with this email already exists' });
+  }
+  res.status(500).json({ error: 'Internal server error' });
+}
+
+export function notFoundHandler(_req: Request, res: Response) {
+  res.status(404).json({ error: 'Route not found' });
+}

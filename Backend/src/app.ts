@@ -1,50 +1,15 @@
+import express from 'express';
+import cors from 'cors';
+import leadsRouter from './routes/leads.js';
+import { errorHandler, notFoundHandler } from './middlewares/error.js';
 
-  import express from "express"
-import helmet from "helmet"
-import cors from 'cors'
-import {errorMiddleware} from "./middlewares/error.js"
-import dotenv from "dotenv"
-  
-  dotenv.config({path: './.env',});
-  
-  export const envMode = process.env.NODE_ENV?.trim() || 'DEVELOPMENT';
-  const port = process.env.PORT || 3000;
-  
-
-  
-
+export function createApp() {
   const app = express();
-  
-                                
-  
-  
-app.use(
-  helmet({
-    contentSecurityPolicy: envMode !== "DEVELOPMENT",
-    crossOriginEmbedderPolicy: envMode !== "DEVELOPMENT",
-  })
-);
-    
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(cors({origin:'*',credentials:true}));
-    
-  
-  app.get('/', (req, res) => {
-     res.send('Hello, World!');
-  });
-  
-  // your routes here
-  
-    
-app.get("/*splat", (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Page not found",
-  });
-});
-  
-  app.use(errorMiddleware);
-    
-  app.listen(port, () => console.log('Server is working on Port:'+port+' in '+envMode+' Mode.'));
-  
+  app.use(cors({ origin: process.env.CORS_ORIGIN ?? '*' }));
+  app.use(express.json());
+  app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+  app.use('/api/leads', leadsRouter);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
+  return app;
+}
