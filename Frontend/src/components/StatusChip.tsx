@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material';
-import { LeadStatus } from '../types/lead';
+import type { LeadStatus } from '../types/lead';
 
 const COLORS: Record<LeadStatus, string> = {
   New: '#03b7d3',

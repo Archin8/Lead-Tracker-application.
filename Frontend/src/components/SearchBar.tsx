@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Paper,
-  Stack,
+  Box,
   TextField,
   FormControl,
   InputLabel,
@@ -10,7 +10,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { LEAD_STATUSES, LeadStatus } from '../types/lead';
+import { LEAD_STATUSES, type LeadStatus } from '../types/lead';
 
 interface SearchBarProps {
   onSearch: (q: string, status: LeadStatus | '') => void;
@@ -32,7 +32,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <Paper sx={{ p: 2, mb: 3 }}>
-      <Stack direction="row" gap={2} flexWrap="wrap">
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, flexWrap: 'wrap' }}>
         <TextField
           placeholder="Search leads by name, email, or phone…"
           variant="outlined"
@@ -40,12 +40,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           sx={{ flexGrow: 1, minWidth: 200 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            },
           }}
         />
         <FormControl size="small" sx={{ minWidth: 160 }}>
@@ -65,7 +67,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             ))}
           </Select>
         </FormControl>
-      </Stack>
+      </Box>
     </Paper>
   );
 }

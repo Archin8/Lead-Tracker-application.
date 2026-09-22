@@ -1,4 +1,4 @@
-import { Lead, LeadStatus, NewLeadInput } from '../types/lead';
+import type { Lead, LeadStatus, NewLeadInput } from '../types/lead';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 

@@ -1,6 +1,6 @@
-import { useState, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Paper, Box, TextField, Button, Alert, Typography } from '@mui/material';
-import { NewLeadInput } from '../types/lead';
+import type { NewLeadInput } from '../types/lead';
 
 interface LeadFormProps {
   onCreate: (input: NewLeadInput) => Promise<void>;

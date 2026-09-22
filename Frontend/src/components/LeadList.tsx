@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import StatusChip from './StatusChip';
-import { Lead, LEAD_STATUSES, LeadStatus } from '../types/lead';
+import { LEAD_STATUSES, type Lead, type LeadStatus } from '../types/lead';
 
 interface LeadListProps {
   leads: Lead[];
