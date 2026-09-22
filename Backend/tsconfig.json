@@ -9,9 +9,7 @@
     "outDir": "./dist",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    
-    
-    "typeRoots": ["./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
