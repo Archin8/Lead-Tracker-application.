@@ -5,6 +5,7 @@ const router = Router();
 router.get('/', listLeads);
 router.get('/:id', getLead);
 router.post('/', createLead);
+router.put('/:id/status', updateLeadStatus);
 router.patch('/:id/status', updateLeadStatus);
 
 export default router;

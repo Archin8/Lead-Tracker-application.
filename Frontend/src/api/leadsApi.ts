@@ -36,7 +36,7 @@ export async function createLead(input: NewLeadInput): Promise<Lead> {
 
 export async function updateLeadStatus(id: string, status: LeadStatus): Promise<Lead> {
   const res = await fetch(`${API_URL}/api/leads/${id}/status`, {
-    method: 'PATCH',
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
   });
