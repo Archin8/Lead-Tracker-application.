@@ -6,17 +6,37 @@ import { rateLimiter } from './middlewares/rateLimiter.js';
 
 export function createApp() {
   const app = express();
-  const allowedOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
-    : '*';
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    const corsEnv = process.env.CORS_ORIGIN;
 
-  app.use(
-    cors({
-      origin: allowedOrigins,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-    })
-  );
+    if (!corsEnv || corsEnv === '*' || corsEnv.trim() === '') {
+      res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    } else {
+      const allowedOrigins = corsEnv.split(',').map((o) => o.trim());
+      if (origin && allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      } else {
+        res.setHeader('Access-Control-Allow-Origin', origin || allowedOrigins[0]);
+      }
+    }
+
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization, X-Requested-With'
+    );
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    next();
+  });
   app.use(express.json());
   app.use(rateLimiter);
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
