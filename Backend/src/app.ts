@@ -6,7 +6,17 @@ import { rateLimiter } from './middlewares/rateLimiter.js';
 
 export function createApp() {
   const app = express();
-  app.use(cors({ origin: process.env.CORS_ORIGIN ?? '*' }));
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    : '*';
+
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+  );
   app.use(express.json());
   app.use(rateLimiter);
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
